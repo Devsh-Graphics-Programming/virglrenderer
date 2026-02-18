@@ -57,7 +57,7 @@
 #  include <unistd.h>
 #  include <log/log.h>
 #  include <cutils/properties.h>
-#elif DETECT_OS_LINUX || DETECT_OS_CYGWIN || DETECT_OS_SOLARIS || DETECT_OS_HURD
+#elif DETECT_OS_LINUX || DETECT_OS_CYGWIN || DETECT_OS_SOLARIS || DETECT_OS_HURD || DETECT_OS_EMSCRIPTEN
 #  include <unistd.h>
 #elif DETECT_OS_OPENBSD || DETECT_OS_FREEBSD
 #  include <sys/resource.h>
@@ -259,6 +259,9 @@ os_get_total_physical_memory(uint64_t *size)
 
    *size = (uint64_t)info.max_pages * (uint64_t)B_PAGE_SIZE;
    return true;
+#elif DETECT_OS_EMSCRIPTEN
+   (void) size;
+   return false;
 #elif DETECT_OS_WINDOWS
    MEMORYSTATUSEX status;
    BOOL ret;
@@ -329,7 +332,7 @@ os_get_available_system_memory(UNUSED uint64_t *size)
 bool
 os_get_page_size(uint64_t *size)
 {
-#if DETECT_OS_UNIX && !DETECT_OS_APPLE && !DETECT_OS_HAIKU
+#if DETECT_OS_UNIX && !DETECT_OS_APPLE && !DETECT_OS_HAIKU && !DETECT_OS_EMSCRIPTEN
    const long page_size = sysconf(_SC_PAGE_SIZE);
 
    if (page_size <= 0)
@@ -353,6 +356,9 @@ os_get_page_size(uint64_t *size)
    mib[0] = CTL_HW;
    mib[1] = HW_PAGESIZE;
    return (sysctl(mib, 2, size, &len, NULL, 0) == 0);
+#elif DETECT_OS_EMSCRIPTEN
+   *size = 65536;
+   return true;
 #else
 #error unexpected platform in os_sysinfo.c
    return false;

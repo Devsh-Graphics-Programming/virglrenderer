@@ -58,7 +58,6 @@ warnings = [
    '-Werror=enum-int-mismatch',
    '-Werror=implicit-function-declaration',
    '-Werror=missing-prototypes',
-   '-Werror=pedantic',
    '-Wmissing-prototypes',
    '-Werror=incompatible-pointer-types',
    '-Werror=int-to-pointer-cast',
@@ -67,6 +66,10 @@ warnings = [
    '-Wno-missing-field-initializers',
    '-Werror=format',
 ]
+
+if host_machine.system() != 'emscripten'
+   warnings += ['-Werror=pedantic']
+endif
 
 add_project_arguments(cc.get_supported_arguments(warnings), language : 'c')
 

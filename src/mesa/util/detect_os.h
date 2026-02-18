@@ -20,6 +20,11 @@
 #define DETECT_OS_UNIX 1
 #endif
 
+#if defined(__EMSCRIPTEN__)
+#define DETECT_OS_EMSCRIPTEN 1
+#define DETECT_OS_UNIX 1
+#endif
+
 /*
  * Android defines __linux__, so DETECT_OS_LINUX and DETECT_OS_UNIX will
  * also be defined.
@@ -99,6 +104,9 @@
 #endif
 #ifndef DETECT_OS_DRAGONFLY
 #define DETECT_OS_DRAGONFLY 0
+#endif
+#ifndef DETECT_OS_EMSCRIPTEN
+#define DETECT_OS_EMSCRIPTEN 0
 #endif
 #ifndef DETECT_OS_FREEBSD
 #define DETECT_OS_FREEBSD 0
