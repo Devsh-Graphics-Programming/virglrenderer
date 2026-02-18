@@ -85,7 +85,11 @@ with_host_darwin = host_machine.system() == 'darwin'
 not_found = dependency('', required: false)
 gbm_dep = not_found
 thread_dep = dependency('threads')
-epoxy_dep = dependency('epoxy', version: '>= 1.5.4')
+epoxy_required = true
+if get_option('venus') and get_option('platforms').length() == 0 and not get_option('video') and not get_option('tests')
+  epoxy_required = false
+endif
+epoxy_dep = dependency('epoxy', version: '>= 1.5.4', required: epoxy_required)
 m_dep = cc.find_library('m', required : false)
 dl_dep = not_found
 if not with_host_windows and not with_host_darwin
